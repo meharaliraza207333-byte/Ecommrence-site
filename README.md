@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# [CLIENT BRAND NAME] storefront
 
-## Getting Started
+Premium multi-page Next.js storefront for Pakistan with a Cash on Delivery checkout and a Supabase-secured admin workspace.
 
-First, run the development server:
+## Local setup
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```powershell
+cd "D:\Eccomrence site\atelier-store"
+Copy-Item .env.example .env.local
+npm.cmd install
+npm.cmd run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`. Update brand, contact details, social links, currency delivery settings and announcement text in `lib/brand.ts`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Supabase setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Create a Supabase project, then run `supabase/schema.sql` in its SQL Editor.
+2. Copy the Project URL, anon key, and **server-only** service-role key to `.env.local` using `.env.example`. Never expose the service-role key to browser code or commit it.
+3. In Authentication settings, configure the site URL and allowed redirect URLs for local and production domains.
+4. Register the client owner, then run the final `update profiles set role='admin' ...` statement from the schema using their auth user UUID.
+5. The owner can now use `/admin` to upload product images, add products and update order statuses. Storage is public-read, but only `admin` profiles can write.
 
-## Learn More
+Never add a Supabase service-role key to `NEXT_PUBLIC_*` or any browser code.
 
-To learn more about Next.js, take a look at the following resources:
+## Campaign images
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Three clearly described temporary Unsplash campaign images are currently used in `app/page.tsx`, because no attached image files were present. Replace the hero, mugs campaign, and merchandise campaign sources with the client’s supplied images in `public/campaigns/` (or their approved CDN URLs). Product imagery is independently sourced and varied.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Testing checklist
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Run `npm.cmd run build` before deploy.
+- Verify mobile navigation, all collection routes, filters, sorting, search, empty states and image loading.
+- Add variants to cart, refresh, adjust quantities, remove lines and verify PKR totals/free-shipping threshold.
+- Place a COD order; verify validation and the confirmation route.
+- Verify customer login/register, then verify non-admin access to `/admin` redirects.
+- Verify admin product upload/addition and order status updates after Supabase setup.

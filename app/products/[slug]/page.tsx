@@ -1,0 +1,2 @@
+import { notFound } from "next/navigation"; import { SiteShell } from "@/components/site-shell"; import { getProduct,products } from "@/lib/products"; import { ProductDetail } from "@/components/product-detail";
+export default async function ProductPage({params}:{params:Promise<{slug:string}>}){const {slug}=await params;const product=getProduct(slug);if(!product)notFound();return <SiteShell><ProductDetail product={product} related={products.filter(p=>p.category===product.category&&p.id!==product.id).slice(0,4)}/></SiteShell>}
